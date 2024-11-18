@@ -25,6 +25,7 @@ public class RentalPropertyController {
     List <RentalProperty> getRentalByLandlord (@PathVariable String id){
         return rentalPropertyService.getRentalByLandlord(id);
     }
+
     @PostMapping
     RentalProperty createRental(@RequestBody RentalPropertyCreationRequest request) {
         return rentalPropertyService.createRentalProperty(request);
@@ -34,5 +35,19 @@ public class RentalPropertyController {
     String deleteRental (@PathVariable String rentalpropertyId){
         rentalPropertyService.deleteRental(rentalpropertyId);
         return "has beeen Delate rental";
+    }
+
+
+    @GetMapping("/status={status}")
+    List <RentalProperty> getRentalByStatus (@PathVariable int status){
+        return rentalPropertyService.getRentalByStatus(status);
+    }
+
+
+
+    @PutMapping("/rentalpropertyid={rentalpropertyId}")
+    String updateRental (@PathVariable String rentalpropertyId , @RequestBody RentalPropertyCreationRequest request){
+        rentalPropertyService.updateRentalProperty(rentalpropertyId, request);
+        return "has beeen update rental";
     }
 }

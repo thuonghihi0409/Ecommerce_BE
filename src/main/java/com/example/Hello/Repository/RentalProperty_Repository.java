@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface RentalProperty_Repository extends JpaRepository<RentalProperty,String> {
     List<RentalProperty> findByLandlord_Id (String id);
+    List<RentalProperty> findAllByStatus(int status);
     void deleteByLandlord_Id (String id);
 }

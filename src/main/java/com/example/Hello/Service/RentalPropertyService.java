@@ -30,15 +30,40 @@ public class RentalPropertyService {
         rental.setWaterPrice(request.getWaterPrice());
         rental.setRentPrice(request.getRentPrice());
         rental.setDescription(request.getDescription());
+        rental.setStatus(request.getStatus());
         rental.setPostDate(request.getPostDate());
         rental.setUpdateDate(request.getUpdateDate());
         rental.setPropertyName(request.getPropertyName());
         rental.setLandlord( userRepository.findById(request.getLandlordId()).orElseThrow(() -> new RuntimeException("Loi tao rental")));
         return rentalPropertyRepository.save(rental);
     }
+
+
+    public RentalProperty updateRentalProperty(String id,RentalPropertyCreationRequest request){
+        RentalProperty rental = rentalPropertyRepository.findById(id).orElseThrow(() -> new RuntimeException("not find rental") );
+        rental.setArea(request.getArea());
+        rental.setAddress(request.getAddress());
+        rental.setAvailableRooms(request.getAvailableRooms());
+        rental.setImages(request.getImages());
+        rental.setElectricPrice(request.getElectricPrice());
+        rental.setWaterPrice(request.getWaterPrice());
+        rental.setRentPrice(request.getRentPrice());
+        rental.setDescription(request.getDescription());
+        rental.setStatus(request.getStatus());
+        rental.setPostDate(request.getPostDate());
+        rental.setUpdateDate(request.getUpdateDate());
+        rental.setPropertyName(request.getPropertyName());
+        rental.setLandlord( userRepository.findById(request.getLandlordId()).orElseThrow(() -> new RuntimeException("Loi tao rental")));
+        return rentalPropertyRepository.save(rental);
+    }
+
+
     public List<RentalProperty> getRental (){return rentalPropertyRepository.findAll();}
     public List <RentalProperty> getRentalByLandlord (String id){
         return rentalPropertyRepository.findByLandlord_Id(id);
+    }
+    public List <RentalProperty> getRentalByStatus (int id){
+        return rentalPropertyRepository.findAllByStatus(id);
     }
     @Transactional
     public void deleteRental (String id){

@@ -28,6 +28,7 @@ public class RentalProperty {
     private List<String> images = new ArrayList<>();
     private Date postDate;
     private Date updateDate;
+    private int status;
     @ManyToOne
     @JoinColumn(name = "landlord_id")
     private User landlord;
