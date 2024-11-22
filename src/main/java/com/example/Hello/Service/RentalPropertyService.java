@@ -33,13 +33,15 @@ public class RentalPropertyService {
         rental.setStatus(request.getStatus());
         rental.setPostDate(request.getPostDate());
         rental.setUpdateDate(request.getUpdateDate());
+        rental.setUrlmap(request.getUrlmap());
         rental.setPropertyName(request.getPropertyName());
+        rental.setNumberViewer(request.getNumberViewer());
         rental.setLandlord( userRepository.findById(request.getLandlordId()).orElseThrow(() -> new RuntimeException("Loi tao rental")));
         return rentalPropertyRepository.save(rental);
     }
 
-
-    public RentalProperty updateRentalProperty(String id,RentalPropertyCreationRequest request){
+@Transactional
+public RentalProperty updateRentalProperty(String id,RentalPropertyCreationRequest request){
         RentalProperty rental = rentalPropertyRepository.findById(id).orElseThrow(() -> new RuntimeException("not find rental") );
         rental.setArea(request.getArea());
         rental.setAddress(request.getAddress());
@@ -53,11 +55,21 @@ public class RentalPropertyService {
         rental.setPostDate(request.getPostDate());
         rental.setUpdateDate(request.getUpdateDate());
         rental.setPropertyName(request.getPropertyName());
+        rental.setNumberViewer(request.getNumberViewer());
         rental.setLandlord( userRepository.findById(request.getLandlordId()).orElseThrow(() -> new RuntimeException("Loi tao rental")));
         return rentalPropertyRepository.save(rental);
     }
+    @Transactional
+    public void updateRentalStatus(String id, int status) {
+            // Find the rental property by ID
+            RentalProperty rental = rentalPropertyRepository.findById(id).orElseThrow(() -> new RuntimeException("Rental property not found"));
 
+            // Update the status
+            rental.setStatus(status);
 
+            // Save the updated rental property back to the repository
+            rentalPropertyRepository.save(rental);
+        }
     public List<RentalProperty> getRental (){return rentalPropertyRepository.findAll();}
     public List <RentalProperty> getRentalByLandlord (String id){
         return rentalPropertyRepository.findByLandlord_Id(id);
@@ -69,5 +81,14 @@ public class RentalPropertyService {
     public void deleteRental (String id){
         propertyUtillityRepository.deleteAllByRentalProperty_PropertyId(id);
         rentalPropertyRepository.deleteById(id);
+    }
+
+    public List<RentalProperty> getRentalByMonth(int month, int year) {
+        return rentalPropertyRepository.findByMonthAndYear(month, year);
+    }
+
+    public List<RentalProperty> getTop3MostViewedProperties() {
+        List<RentalProperty> properties = rentalPropertyRepository.findTop3ByOrderByNumberViewerDesc();
+        return properties;
     }
 }

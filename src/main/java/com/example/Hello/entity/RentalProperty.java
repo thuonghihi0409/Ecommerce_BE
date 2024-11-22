@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Setter;
 
+import javax.swing.text.Position;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,9 +30,12 @@ public class RentalProperty {
     private Date postDate;
     private Date updateDate;
     private int status;
+    private long numberViewer;
+    private String urlmap;
     @ManyToOne
     @JoinColumn(name = "landlord_id")
     private User landlord;
+
 
 }
 

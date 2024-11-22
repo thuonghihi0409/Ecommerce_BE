@@ -21,7 +21,9 @@ public class RentalPropertyCreationRequest {
     private String electricPrice;
     private List<String> images = new ArrayList<>();
     private Date postDate;
+    private long numberViewer;
     private int status;
+    private String urlmap;
     private Date updateDate;
     private String landlordId ;
 }

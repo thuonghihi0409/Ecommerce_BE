@@ -14,6 +14,5 @@ public class UserUpdataRequest {
     private String sdt;
     private String gmail;
     private  String vaitro;
-    private Date ngaytao;
     private String avturl ;
 }

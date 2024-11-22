@@ -24,7 +24,7 @@ public class UserController {
     List<User> getUers (){
         return userService.getUsers();
     }
-    @GetMapping("/{userId}")
+    @GetMapping("/userid={userId}")
     User getUser (@PathVariable String userId){
         return userService.getUser(userId);
     }
@@ -34,11 +34,11 @@ public class UserController {
         return userService.getUserByUsername(username);
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/userid={userId}")
     User update (@PathVariable String userId, @RequestBody @Valid UserUpdataRequest request){
         return  userService.updateUser(userId,request);
     }
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/userid={userId}")
     String delete (@PathVariable String userId){
         userService.delateUser(userId);
         return "user has been delete";

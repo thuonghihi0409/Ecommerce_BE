@@ -55,7 +55,7 @@ public class UserService {
         user.setSdt(request.getSdt());
         user.setGmail(request.getGmail());
         user.setVaitro(request.getVaitro());
-        user.setNgaytao(request.getNgaytao());
+        user.setAvturl(request.getAvturl());
         return userRepository.save(user);
     }
     @Transactional
