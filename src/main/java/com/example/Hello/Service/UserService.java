@@ -1,79 +1,62 @@
 package com.example.Hello.Service;
 
-import com.example.Hello.Repository.Conversation_Repository;
-import com.example.Hello.Repository.Message_Repository;
-import com.example.Hello.Repository.RentalProperty_Repository;
-import com.example.Hello.Repository.User_Repository;
-import com.example.Hello.dto.request.UserCreationRequest;
-import com.example.Hello.dto.request.UserUpdataRequest;
-import com.example.Hello.entity.Conversation;
+
+import com.example.Hello.Mapper.UserMapper;
+import com.example.Hello.Repository.UserRepository;
+import com.example.Hello.dto.UserDTO;
 import com.example.Hello.entity.User;
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     @Autowired
-    private User_Repository userRepository;
+    private final UserRepository userRepository;
     @Autowired
-    private RentalProperty_Repository rentalPropertyRepository;
+    private final UserMapper userMapper;
     @Autowired
-    private Conversation_Repository conversationRepository;
-    @Autowired
-    private Message_Repository messageRepository;
-    public User CreateUser (UserCreationRequest request){
-        User user = new User();
-        if(userRepository.existsByUsername(request.getUsername()))
-            throw new RuntimeException("User existed");
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setName(request.getName());
-        user.setSdt(request.getSdt());
-        user.setGmail(request.getGmail());
-        user.setVaitro(request.getVaitro());
-        user.setNgaytao(request.getNgaytao());
-        user.setAvturl(request.getAvturl());
-        return userRepository.save(user);
-    }
-    public List<User> getUsers (){
-        return userRepository.findAll();
-    }
-    public User getUser (String id){
-       return userRepository.findById(id).orElseThrow(() -> new RuntimeException("user not found"));
-    }
-    public User getUserByUsername (String username){
-        return userRepository.findByUsername(username);
+    private final PasswordEncoder passwordEncoder;
+
+    public UserDTO createUser(UserDTO userDTO, String password) {
+        User user = userMapper.toEntity(userDTO);
+        user.setPasswordHash(passwordEncoder.encode(password));
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        user.setActive(true);
+        return userMapper.toDTO(userRepository.save(user));
     }
 
-    public User updateUser (String userId, UserUpdataRequest request){
-        User user= getUser(userId);
-        user.setPassword(request.getPassword());
-        user.setName(request.getName());
-        user.setSdt(request.getSdt());
-        user.setGmail(request.getGmail());
-        user.setVaitro(request.getVaitro());
-        user.setAvturl(request.getAvturl());
-        return userRepository.save(user);
+    public UserDTO updateUser(Long id, UserDTO userDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.setFullName(userDTO.getFullName());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setAddress(userDTO.getAddress());
+        user.setRole(userDTO.getRole());
+        user.setActive(userDTO.isActive());
+        user.setUpdatedAt(LocalDateTime.now());
+        return userMapper.toDTO(userRepository.save(user));
     }
-    @Transactional
-    public void delateUser (String userId){
-        for (Conversation conversation : conversationRepository.findByUser1_IdOrUser2_Id(userId,userId) ){
-            messageRepository.deleteAllByConversation_ConversationId(conversation.getConversationId());
-        }
-        conversationRepository.deleteAllByUser1_IdOrUser2_Id(userId, userId);
-        rentalPropertyRepository.deleteByLandlord_Id(userId);
-        userRepository.deleteById(userId);
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
-    public User loginUser(String username, String password) {
-        User user = userRepository.findByUsername(username);
 
-        if (user == null || !user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Sai username hoặc password");
-        }
+    public UserDTO getUserById(Long id) {
+        return userMapper.toDTO(userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found")));
+    }
 
-        return user;  // Đăng nhập thành công, trả về đối tượng user
+    public Page<UserDTO> getUsersByRole(String role, Pageable pageable) {
+        return userRepository.findByRole(role, pageable).map(userMapper::toDTO);
     }
 }

@@ -1,88 +1,43 @@
 package com.example.Hello.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
+
+@Table(name = "Users")
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+
+    @Column(unique = true, nullable = false)
     private String username;
-    private String password;
-    private String name;
-    private String sdt;
-    private String gmail;
-    private String avturl ;
-    private  String vaitro;
-    private Date ngaytao;
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
 
-    public String getUsername() {
-        return username;
-    }
+    @Column(unique = true, nullable = false)
+    private String email;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    private String fullName;
+    private String phoneNumber;
+    private String address;
 
-    public String getPassword() {
-        return password;
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private boolean isActive;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSdt() {
-        return sdt;
-    }
-
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
-    }
-
-    public String getGmail() {
-        return gmail;
-    }
-
-    public void setGmail(String gmail) {
-        this.gmail = gmail;
-    }
-
-    public String getVaitro() {
-        return vaitro;
-    }
-
-    public void setVaitro(String vaitro) {
-        this.vaitro = vaitro;
-    }
-
-    public Date getNgaytao() {
-        return ngaytao;
-    }
-
-    public void setNgaytao(Date ngaytao) {
-        this.ngaytao = ngaytao;
-    }
+    // Getters and Setters
 }

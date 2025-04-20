@@ -7,6 +7,11 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
-
-
+jwt:
+  secret: funny123456789123456789123456789
+  expiration: 86400
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
